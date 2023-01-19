@@ -9,10 +9,10 @@ class UserAdmin(admin.ModelAdmin):
     """
     Custom admin class for the custom user model
     """
-    fields = ('email', 'password', 'is_active',)
-    list_display = ('email', 'is_active',)
+    fields = ('email', 'password', 'is_active', 'first_name', 'last_name')
+    list_display = ('email', 'is_active', 'first_name', 'last_name')
     list_filter = ('is_staff', 'is_superuser')
-    search_fields = ('email',)
+    search_fields = ('email', 'first_name')
     ordering = ('email',)
     filter_horizontal = ()
 
