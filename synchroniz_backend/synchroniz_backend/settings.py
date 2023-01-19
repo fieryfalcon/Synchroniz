@@ -40,8 +40,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api'
+    'api',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -54,6 +68,19 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'synchroniz_backend.urls'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'CLIENT_ID': '275056952548-m470vtbggmbdghm2674cl9ptipemt00t.apps.googleusercontent.com',
+        'CLIENT_SECRET': 'YOUR_CLIENT_SECRET',
+        'SCOPE': ['profile', 'email']
+    }
+}
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 TEMPLATES = [
     {
