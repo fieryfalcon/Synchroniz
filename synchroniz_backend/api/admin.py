@@ -22,3 +22,6 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdmin)
+admin.site.register(note)
+admin.site.register(task)
+admin.site.register(category)

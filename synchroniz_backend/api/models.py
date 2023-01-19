@@ -51,3 +51,40 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class category(models.Model):
+    class Meta:
+        verbose_name_plural = "categories"
+
+    category_name = models.CharField(max_length=40)
+
+    def __str__(self):
+        return self.category_name
+
+
+class task(models.Model):
+
+    STATUS_CHOICES = ((1, "To do"), ("In Progress",
+                      "In Progress"), (3, "Done"))
+
+    task_text = models.TextField()
+    date_of_creation = models.DateTimeField(auto_now_add=True)
+    date_of_due = models.DateField()
+    time_of_due = models.DateTimeField()
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=1)
+    email = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ManyToManyField(category)
+
+    def __str__(self):
+        return self.task_text
+
+
+class note(models.Model):
+
+    note_text = models.TextField()
+    date_of_creation = models.DateTimeField(auto_now=True)
+    email = models.ManyToManyField(User)
+
+    def __str__(self):
+        return self.note_text
