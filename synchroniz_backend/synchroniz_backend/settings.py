@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
+    "corsheaders",
+    'django_filters',
 
 
 
@@ -58,9 +60,12 @@ INSTALLED_APPS = [
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
+
 )
 SITE_ID = 1
-LOGIN_REDIRECT_URL = '/'
+
+
+LOGIN_REDIRECT_URL = '/user/api_view/'
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -102,6 +107,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+CORS_ORIGIN_ALLOW_ALL = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -111,14 +117,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = 'synchroniz_backend.urls'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'CLIENT_ID': '275056952548-m470vtbggmbdghm2674cl9ptipemt00t.apps.googleusercontent.com',
-        'CLIENT_SECRET': 'YOUR_CLIENT_SECRET',
+        'CLIENT_ID': '501598956013-mu6f6170kupmdhmhdgnbt24id5ghhd2c.apps.googleusercontent.com',
+        'CLIENT_SECRET': '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',
         'SCOPE': ['profile', 'email']
     }
 }
@@ -209,4 +217,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 
+}
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
