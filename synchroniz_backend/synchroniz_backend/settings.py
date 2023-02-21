@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     "corsheaders",
     'django_filters',
+    'agora'
 
 
 

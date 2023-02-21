@@ -6,6 +6,12 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import make_password
 
 
+# class VideoChatRoomSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = VideoChatRoom
+#         fields = ['id', 'name', 'type', 'user']
+
+
 class app_user_serializer(serializers.ModelSerializer):
     class Meta:
         model = User

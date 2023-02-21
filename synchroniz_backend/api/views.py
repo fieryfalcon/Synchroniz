@@ -15,6 +15,19 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from allauth.socialaccount.models import SocialAccount
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse, QueryDict
+# import agora_rtc_sdk
+
+
+def generate_token(room_name):
+    app_id = "YOUR_APP_ID"
+    app_certificate = "YOUR_APP_CERTIFICATE"
+    channel_name = room_name
+    role = agora_rtc_sdk.AGORA_APP_ID_ROLE_PUBLISHER
+    uid = None
+    expiration_time_in_seconds = 3600
+    result, token = agora_rtc_sdk.generate_token(
+        app_id, app_certificate, channel_name, role, uid, expiration_time_in_seconds)
+    return token
 
 
 class ExchangeTokenView(APIView):
@@ -88,3 +101,13 @@ class category_viewset(viewsets.ModelViewSet):
     serializer_class = category_serializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
+
+
+# class VideoChatRoomViewSet(viewsets.ModelViewSet):
+#     queryset = VideoChatRoom.objects.all()
+#     serializer_class = VideoChatRoomSerializer
+
+#     def join_room(self, request, pk=None):
+#         room = self.get_object()
+#         token = generate_token(room.name)
+#         return Response({'token': token})

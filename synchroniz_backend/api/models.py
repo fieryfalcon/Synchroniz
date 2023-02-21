@@ -63,6 +63,12 @@ class category(models.Model):
         return self.category_name
 
 
+# class VideoChatRoom(models.Model):
+#     name = models.CharField(max_length=100)
+#     type = models.CharField(max_length=100)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
 class task(models.Model):
 
     STATUS_CHOICES = ((1, "To do"), ("In Progress",
