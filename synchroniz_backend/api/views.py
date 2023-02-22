@@ -4,6 +4,8 @@ from rest_framework import viewsets
 from rest_framework import permissions, filters
 from .models import *
 from .serializers import *
+import random
+import time
 from rest_framework.permissions import IsAuthenticated
 from datetime import timedelta
 from rest_framework.authentication import TokenAuthentication
@@ -16,18 +18,84 @@ from allauth.socialaccount.models import SocialAccount
 from rest_framework.response import Response
 from django.http import HttpResponse, JsonResponse, QueryDict
 # import agora_rtc_sdk
+from agora_token_builder import RtcTokenBuilder
+from .models import RoomMember
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 
-def generate_token(room_name):
-    app_id = "YOUR_APP_ID"
-    app_certificate = "YOUR_APP_CERTIFICATE"
-    channel_name = room_name
-    role = agora_rtc_sdk.AGORA_APP_ID_ROLE_PUBLISHER
-    uid = None
-    expiration_time_in_seconds = 3600
-    result, token = agora_rtc_sdk.generate_token(
-        app_id, app_certificate, channel_name, role, uid, expiration_time_in_seconds)
-    return token
+# Create your views here.
+
+def lobby(request):
+    return render(request, 'base/lobby.html')
+
+
+def room(request):
+    return render(request, 'base/room.html')
+
+
+def getToken(request):
+    appId = "aaacc98a97ee49c481dbf72c402745c1"
+    appCertificate = "5187085835e642fbbbdf6e2ab8aa2ec4"
+    channelName = "123"
+    uid = random.randint(1, 230)
+    expirationTimeInSeconds = 3600
+    currentTimeStamp = int(time.time())
+    privilegeExpiredTs = currentTimeStamp + expirationTimeInSeconds
+    role = 1
+
+    token = RtcTokenBuilder.buildTokenWithUid(
+        appId, appCertificate, channelName, uid, role, privilegeExpiredTs)
+
+    return JsonResponse({'token': token, 'uid': uid}, safe=False)
+
+
+@csrf_exempt
+def createMember(request):
+    data = json.loads(request.body)
+    member, created = RoomMember.objects.get_or_create(
+        name=data['name'],
+        uid=data['UID'],
+        room_name=data['room_name']
+    )
+
+    return JsonResponse({'name': data['name']}, safe=False)
+
+
+def getMember(request):
+    uid = request.GET.get('UID')
+    room_name = request.GET.get('room_name')
+
+    member = RoomMember.objects.get(
+        uid=uid,
+        room_name=room_name,
+    )
+    name = member.name
+    return JsonResponse({'name': member.name}, safe=False)
+
+
+@csrf_exempt
+def deleteMember(request):
+    data = json.loads(request.body)
+    member = RoomMember.objects.get(
+        name=data['name'],
+        uid=data['UID'],
+        room_name=data['room_name']
+    )
+    member.delete()
+    return JsonResponse('Member deleted', safe=False)
+
+
+# def generate_token(room_name):
+#     app_id = "YOUR_APP_ID"
+#     app_certificate = "YOUR_APP_CERTIFICATE"
+#     channel_name = room_name
+#     role = agora_rtc_sdk.AGORA_APP_ID_ROLE_PUBLISHER
+#     uid = None
+#     expiration_time_in_seconds = 3600
+#     result, token = agora_rtc_sdk.generate_token(
+#         app_id, app_certificate, channel_name, role, uid, expiration_time_in_seconds)
+#     return token
 
 
 class ExchangeTokenView(APIView):
